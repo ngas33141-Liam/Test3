@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Racing Game</title>
+<style>
+body{
+    margin:0;
+    overflow:hidden;
+    background:#222;
+}
+#game{
+    width:300px;
+    height:600px;
+    background:#555;
+    margin:auto;
+    position:relative;
+    overflow:hidden;
+}
+#player{
+    width:50px;
+    height:90px;
+    background:cyan;
+    position:absolute;
+    bottom:20px;
+    left:125px;
+    border-radius:10px;
+}
+.enemy{
+    width:50px;
+    height:90px;
+    background:red;
+    position:absolute;
+    top:-100px;
+    border-radius:10px;
+}
+</style>
+</head>
+<body>
+
+<div id="game">
+    <div id="player"></div>
+</div>
+
+<script>
+const player = document.getElementById("player");
+const game = document.getElementById("game");
+
+let playerX = 125;
+
+document.addEventListener("keydown", e=>{
+    if(e.key==="ArrowLeft" && playerX>25){
+        playerX -= 50;
+    }
+    if(e.key==="ArrowRight" && playerX<225){
+        playerX += 50;
+    }
+    player.style.left = playerX + "px";
+});
+
+function createEnemy(){
+    const enemy = document.createElement("div");
+    enemy.classList.add("enemy");
+    enemy.style.left = [25,75,125,175,225][Math.floor(Math.random()*5)]+"px";
+    game.appendChild(enemy);
+
+    let y = -100;
+
+    const move = setInterval(()=>{
+        y += 5;
+        enemy.style.top = y+"px";
+
+        let px = player.offsetLeft;
+        let py = player.offsetTop;
+
+        if(
+            y+90 > py &&
+            y < py+90 &&
+            enemy.offsetLeft === px
+        ){
+            alert("Game Over!");
+            location.reload();
+        }
+
+        if(y > 600){
+            enemy.remove();
+            clearInterval(move);
+        }
+    },20);
+}
+
+setInterval(createEnemy,1000);
+</script>
+
+</body>
+</html>
